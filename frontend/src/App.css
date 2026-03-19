@@ -1,0 +1,144 @@
+body {
+  margin: 0;
+  font-family: 'Segoe UI', sans-serif;
+}
+
+/* BACKGROUND */
+.container {
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: radial-gradient(circle, #6fbf73, #2e7d32);
+}
+
+/* MAIN CARD */
+.card {
+  width: 1050px;
+  height: 720px;
+  display: flex;
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+  background: white;
+}
+
+/* LEFT SIDE */
+.left {
+  width: 50%;
+  background: url("https://images.unsplash.com/photo-1501004318641-b39e6451bec6") no-repeat center;
+  background-size: cover;
+}
+
+/* RIGHT SIDE */
+.right {
+  width: 50%;
+  background: #f3f5f3;
+  padding: 60px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  overflow: hidden;
+}
+
+/* HEADING */
+.right h2 {
+  font-size: 36px;
+  margin-bottom: 20px;
+}
+
+/* GRID */
+.form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 15px;
+}
+
+.full-width {
+  grid-column: span 2;
+}
+
+/* INPUT BOX */
+.input-box {
+  margin-bottom: 10px;
+}
+
+/* INPUT */
+.input-box input {
+  width: 100%;
+  padding: 15px;
+  border: none;
+  border-radius: 10px;
+  background: #e5e7e6;
+  font-size: 18px;
+}
+
+/* BUTTON */
+button {
+  padding: 15px;
+  border: none;
+  background: #7cb342;
+  color: white;
+  font-weight: bold;
+  font-size: 18px;
+  border-radius: 10px;
+  cursor: pointer;
+  margin-top: 15px;
+}
+
+button:hover {
+  background: #558b2f;
+}
+
+/* SWITCH TEXT */
+.switch-text {
+  margin-top: 15px;
+  font-size: 16px;
+  text-align: center;
+}
+
+.switch-text span {
+  color: #2e7d32;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.switch-text span:hover {
+  text-decoration: underline;
+}
+
+/* ---------------- */
+/* GENDER SECTION */
+/* ---------------- */
+
+.gender-box {
+  display: flex;
+  flex-direction: column;
+}
+
+.gender-label {
+  font-size: 16px;
+  margin-bottom: 8px;
+  font-weight: 500;
+}
+
+.gender-options {
+  display: flex;
+  gap: 40px;
+  align-items: center;
+}
+
+/* 🔥 FIXED ALIGNMENT */
+.radio-label {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.radio-label input {
+  margin: 0;
+  transform: scale(1.1);
+  cursor: pointer;
+}
