@@ -3,142 +3,123 @@ import { useNavigate } from "react-router-dom";
 
 function Register() {
 
-const navigate = useNavigate();
+  const navigate = useNavigate();
 
-const [form, setForm] = useState({
-  firstName: "",
-  lastName: "",
-  email: "",
-  contact: "",
-  gender: "",
-  password: "",
-  confirmPassword: ""
-});
-
-const handleChange = (e) => {
-  setForm({ ...form, [e.target.name]: e.target.value });
-};
-
-const handleRegister = async () => {
-
-  if (form.password !== form.confirmPassword) {
-    alert("Passwords do not match");
-    return;
-  }
-
-  const res = await fetch("http://127.0.0.1:5000/register", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json"
-    },
-    body: JSON.stringify({
-      username: form.firstName + " " + form.lastName,
-      email: form.email,
-      password: form.password
-    })
+  const [form, setForm] = useState({
+    firstName: "",
+    lastName: "",
+    email: "",
+    contact: "",
+    gender: "",
+    password: "",
+    confirmPassword: ""
   });
 
-  const data = await res.json();
-  alert(data.message);
+  const handleChange = (e) => {
+    setForm({ ...form, [e.target.name]: e.target.value });
+  };
 
-  if (res.status === 200) {
-    navigate("/");
-  }
-};
+  const handleRegister = async () => {
 
-return (
-<div className="container">
+    if (form.password !== form.confirmPassword) {
+      alert("Passwords do not match");
+      return;
+    }
 
-  <div className="card">
+    const res = await fetch("http://127.0.0.1:5000/register", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+      firstName: form.firstName,
+      lastName: form.lastName,
+      email: form.email,
+      contact: form.contact,
+      gender: form.gender,
+      password: form.password
+    })
+    });
 
-    {/* LEFT SIDE */}
-    <div className="left"></div>
+    const data = await res.json();
+    alert(data.message);
 
-    {/* RIGHT SIDE */}
-    <div className="right">
+    if (res.status === 200) {
+      navigate("/");
+    }
+  };
 
-      <h2>Create Account</h2>
+  return (
+    <div className="container">
 
-      <div className="form-grid">
+      <div className="card">
 
-        <div className="input-box">
-          <input name="firstName" placeholder="First Name" onChange={handleChange}/>
-        </div>
+        
 
-        <div className="input-box">
-          <input name="lastName" placeholder="Last Name" onChange={handleChange}/>
-        </div>
+        {/* LEFT SIDE */}
+        <div className="left"></div>
+          
+        {/* RIGHT SIDE */}
+        <div className="right">
+            
+          <h2>Create Account</h2>
 
-        <div className="input-box">
-          <input name="email" placeholder="Email" onChange={handleChange}/>
-        </div>
+          <div className="form-grid">
 
-        <div className="input-box">
-          <input name="contact" placeholder="Contact Number" onChange={handleChange}/>
-        </div>
+            <div className="input-box">
+              <input name="firstName" placeholder="First Name" onChange={handleChange}/>
+            </div>
 
-        {/* ✅ Gender Radio Buttons */}
-        <div className="input-box full-width gender-box">
+            <div className="input-box">
+              <input name="lastName" placeholder="Last Name" onChange={handleChange}/>
+            </div>
 
-          <label className="gender-label">Gender:</label>
+            <div className="input-box">
+              <input name="email" placeholder="Email" onChange={handleChange}/>
+            </div>
 
-          <div className="gender-options">
+            <div className="input-box">
+              <input name="contact" placeholder="Contact Number" onChange={handleChange}/>
+            </div>
 
-            <label>
-              <input
-                type="radio"
+            {/* ✅ Gender Dropdown (FIXED) */}
+            <div className="input-box">
+              <select
                 name="gender"
-                value="Male"
+                value={form.gender}
                 onChange={handleChange}
-              /> Male
-            </label>
+                required
+              >
+                <option value="">Select Gender</option>
+                <option value="Male">Male</option>
+                <option value="Female">Female</option>
+                <option value="Other">Other</option>
+              </select>
+            </div>
 
-            <label>
-              <input
-                type="radio"
-                name="gender"
-                value="Female"
-                onChange={handleChange}
-              /> Female
-            </label>
+            <div className="input-box">
+              <input type="password" name="password" placeholder="Password" onChange={handleChange}/>
+            </div>
 
-            <label>
-              <input
-                type="radio"
-                name="gender"
-                value="Other"
-                onChange={handleChange}
-              /> Other
-            </label>
+            <div className="input-box">
+              <input type="password" name="confirmPassword" placeholder="Confirm Password" onChange={handleChange}/>
+            </div>
 
           </div>
 
-        </div>
+          <button onClick={handleRegister}>REGISTER</button>
 
-        <div className="input-box">
-          <input type="password" name="password" placeholder="Password" onChange={handleChange}/>
-        </div>
+          <p className="switch-text">
+            Already have an account?{" "}
+            <span onClick={() => navigate("/")}>Login</span>
+          </p>
 
-        <div className="input-box">
-          <input type="password" name="confirmPassword" placeholder="Confirm Password" onChange={handleChange}/>
         </div>
 
       </div>
 
-      <button onClick={handleRegister}>REGISTER</button>
-
-      <p className="switch-text">
-        Already have an account?{" "}
-        <span onClick={() => navigate("/")}>Login</span>
-      </p>
-
     </div>
-
-  </div>
-
-</div>
-);
-
+  );
 }
 
 export default Register;

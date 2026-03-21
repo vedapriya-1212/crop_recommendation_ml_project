@@ -1,0 +1,87 @@
+/* PAGE BACKGROUND */
+.predict-container {
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: linear-gradient(to right, #a8e063, #56ab2f);
+  font-family: 'Segoe UI', sans-serif;
+}
+
+/* CARD */
+.predict-card {
+  width: 420px;
+  background: white;
+  padding: 35px;
+  border-radius: 20px;
+  box-shadow: 0 15px 40px rgba(0,0,0,0.2);
+  text-align: center;
+}
+
+/* HEADING */
+.predict-card h2 {
+  margin-bottom: 25px;
+  color: #2e7d32;
+}
+
+/* INPUT GROUP */
+.input-group {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.input-group select {
+  padding: 14px;
+  border-radius: 10px;
+  border: none;
+  background: #e8f5e9;
+  font-size: 15px;
+  outline: none;
+  cursor: pointer;
+}
+
+/* INPUT */
+.input-group input {
+  padding: 14px;
+  border-radius: 10px;
+  border: none;
+  background: #e8f5e9;
+  font-size: 15px;
+  outline: none;
+}
+
+/* INPUT FOCUS */
+.input-group input:focus {
+  background: #d0f0d3;
+  border: 1px solid #66bb6a;
+}
+
+/* BUTTON */
+.predict-btn {
+  margin-top: 20px;
+  width: 100%;
+  padding: 14px;
+  border: none;
+  background: #66bb6a;
+  color: white;
+  font-size: 16px;
+  font-weight: bold;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.predict-btn:hover {
+  background: #2e7d32;
+}
+
+/* BACK BUTTON */
+.back-btn {
+  margin-top: 10px;
+  background: #ef5350;
+}
+
+.back-btn:hover {
+  background: #c62828;
+}

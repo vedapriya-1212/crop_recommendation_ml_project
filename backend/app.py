@@ -101,23 +101,32 @@ def validate_inputs(N, P, K, temperature, humidity, ph, rainfall):
 
 @app.route("/register", methods=["POST"])
 def register():
+    try:
+        data = request.json
+        print("Register Data:", data)
 
-    data = request.json
+        if not data:
+            return jsonify({"message": "No data received"}), 400
 
-    username = data["username"]
-    email = data["email"]
-    password = data["password"]
+        if users_collection.find_one({"email": data.get("email")}):
+            return jsonify({"message": "User already exists"}), 400
 
-    if users_collection.find_one({"email": email}):
-        return jsonify({"message": "User already exists"}), 400
+        user = {
+            "firstName": data.get("firstName"),
+            "lastName": data.get("lastName"),
+            "email": data.get("email"),
+            "contact": data.get("contact"),
+            "gender": data.get("gender"),
+            "password": data.get("password")
+        }
 
-    users_collection.insert_one({
-        "username": username,
-        "email": email,
-        "password": password
-    })
+        users_collection.insert_one(user)
 
-    return jsonify({"message": "Registration successful"})
+        return jsonify({"message": "Registration successful"}), 200
+
+    except Exception as e:
+        print("Register Error:", str(e))
+        return jsonify({"message": "Server error"}), 500
 
 
 # ---------------------------
@@ -126,24 +135,23 @@ def register():
 
 @app.route("/login", methods=["POST"])
 def login():
+    try:
+        data = request.json
+        print("Login Data:", data)
 
-    data = request.json
+        user = users_collection.find_one({"email": data.get("email")})
 
-    email = data["email"]
-    password = data["password"]
+        if not user:
+            return jsonify({"message": "User not found"}), 404
 
-    user = users_collection.find_one({
-        "email": email,
-        "password": password
-    })
+        if user["password"] != data.get("password"):
+            return jsonify({"message": "Invalid password"}), 401
 
-    if user:
-        return jsonify({
-            "message": "Login successful",
-            "username": user["username"]
-        })
+        return jsonify({"message": "Login successful"}), 200
 
-    return jsonify({"message": "Invalid credentials"}), 401
+    except Exception as e:
+        print("Login Error:", str(e))
+        return jsonify({"message": "Server error"}), 500
 
 
 # ---------------------------
@@ -152,61 +160,80 @@ def login():
 
 @app.route("/predict", methods=["POST"])
 def predict():
+    try:
+        data = request.json
 
-    data = request.json
+        N = float(data["N"])
+        P = float(data["P"])
+        K = float(data["K"])
+        temperature = float(data["temperature"])
+        humidity = float(data["humidity"])
+        ph = float(data["ph"])
+        rainfall = float(data["rainfall"])
 
-    N = float(data["N"])
-    P = float(data["P"])
-    K = float(data["K"])
-    temperature = float(data["temperature"])
-    humidity = float(data["humidity"])
-    ph = float(data["ph"])
-    rainfall = float(data["rainfall"])
+        errors = validate_inputs(N, P, K, temperature, humidity, ph, rainfall)
 
-    errors = validate_inputs(N, P, K, temperature, humidity, ph, rainfall)
+        if errors:
+            return jsonify({"errors": errors})
 
-    if errors:
-        return jsonify({"errors": errors})
+        input_data = pd.DataFrame(
+            [[N, P, K, temperature, humidity, ph, rainfall]],
+            columns=[
+                "Nitrogen",
+                "phosphorus",
+                "potassium",
+                "temperature",
+                "humidity",
+                "ph",
+                "rainfall"
+            ]
+        )
 
-    input_data = pd.DataFrame(
-        [[N, P, K, temperature, humidity, ph, rainfall]],
-        columns=[
-            "Nitrogen",
-            "phosphorus",
-            "potassium",
-            "temperature",
-            "humidity",
-            "ph",
-            "rainfall"
-        ]
-    )
+        prediction = model.predict(input_data)[0]
 
-    prediction = model.predict(input_data)[0]
+        if label_encoder:
+            prediction = label_encoder.inverse_transform([prediction])[0]
 
-    if label_encoder:
-        prediction = label_encoder.inverse_transform([prediction])[0]
+        explanation = crop_info.get(prediction.lower(), "")
 
-    explanation = crop_info.get(prediction.lower(), "")
+        predictions_collection.insert_one({
+            "N": N,
+            "P": P,
+            "K": K,
+            "temperature": temperature,
+            "humidity": humidity,
+            "ph": ph,
+            "rainfall": rainfall,
+            "prediction": prediction
+        })
 
-    predictions_collection.insert_one({
+        return jsonify({
+            "crop": prediction,
+            "explanation": explanation,
+            "input_data": {
         "N": N,
         "P": P,
         "K": K,
         "temperature": temperature,
         "humidity": humidity,
         "ph": ph,
-        "rainfall": rainfall,
-        "prediction": prediction
-    })
+        "rainfall": rainfall
+        }
+        })
 
-    return jsonify({
-        "crop": prediction,
-        "explanation": explanation
-    })
+    except Exception as e:
+        print("Prediction Error:", str(e))
+        return jsonify({"message": "Server error"}), 500
+
+
+# ---------------------------
+# Home Route
+# ---------------------------
 
 @app.route("/")
 def home():
     return "Backend is running"
+
 
 # ---------------------------
 # Run App

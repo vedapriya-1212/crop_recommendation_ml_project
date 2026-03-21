@@ -16,10 +16,11 @@ body: JSON.stringify({email,password})
 });
 
 const data = await res.json();
+alert(data.message);
 
 if(res.status === 200){
 localStorage.setItem("user", data.username);
-navigate("/dashboard");
+navigate("/home");
 }else{
 alert(data.message);
 }
@@ -28,6 +29,10 @@ alert(data.message);
 return (
 
 <div className="container">
+
+<h1 className="project-title">
+  🌱 Crop Recommendation System
+</h1>
 
 <div className="card">
 

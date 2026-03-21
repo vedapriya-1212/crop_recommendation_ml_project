@@ -1,0 +1,56 @@
+/* PAGE */
+.result-container {
+  padding: 30px;
+  font-family: 'Segoe UI', sans-serif;
+  background: #f5f7f6;
+  min-height: 100vh;
+  font-weight:500;
+  
+}
+
+/* HEADING */
+.result-container h1 {
+  color: #2e7d32;
+}
+
+.explanation {
+  margin-bottom: 20px;
+  color: #444;
+}
+
+/* 🔥 SMALL CHART */
+.chart-wrapper {
+  width: 50%;        /* reduced size */
+  margin: 20px auto;
+  background: white;
+  padding: 15px;
+  border-radius: 15px;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+}
+
+/* INSIGHT CARDS */
+.insight-card {
+  margin: 20px auto;
+  padding: 20px;
+  border-radius: 15px;
+  width: 70%;
+  color: #1b5e20;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+  font-size: 16px;
+}
+
+/* CLIMATE STYLE */
+.climate {
+  background: linear-gradient(to right, #dcedc8, #c5e1a5);
+}
+
+/* YIELD STYLE */
+.yield {
+  background: linear-gradient(to right, #c8e6c9, #a5d6a7);
+}
+
+/* NO DATA */
+.no-data {
+  text-align: center;
+  margin-top: 50px;
+}
