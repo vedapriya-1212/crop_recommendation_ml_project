@@ -3,107 +3,199 @@ import Slider from "react-slick";
 import { useNavigate } from "react-router-dom";
 import "./Home.css";
 
-// import slick styles
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 
 function Home() {
-
   const navigate = useNavigate();
 
+  
+  const rawName = localStorage.getItem("username") || "User";
+
+const name =
+  rawName.charAt(0).toUpperCase() +
+  rawName.slice(1);
+
   const crops = [
-    {
-      name: "Rice",
-      climate: "High Rainfall & Humidity",
-      temp: "27°C",
-      rainfall: "300mm",
-      img: "https://i.pinimg.com/1200x/77/f7/07/77f707a911aa55c9ca3c21dbb6e8d4a0.jpg"
-    },
-    {
-      name: "Wheat",
-      climate: "Moderate Climate",
-      temp: "20°C",
-      rainfall: "100mm",
-      img: "https://i.pinimg.com/1200x/5b/fc/2e/5bfc2e2b9f59e1718f4f23fbda02ab43.jpg"
-    },
-    {
-      name: "Cotton",
-      climate: "Dry Climate",
-      temp: "30°C",
-      rainfall: "80mm",
-      img: "https://i.pinimg.com/1200x/91/58/4f/91584f5cc0f3e4fc2dd58358f5d64086.jpg"
-    },
-    {
-      name: "Maize",
-      climate: "Warm Climate",
-      temp: "25°C",
-      rainfall: "120mm",
-      img: "https://i.pinimg.com/736x/6c/d1/ac/6cd1aca46862bf6409234963d73c865d.jpg"
-    }
-  ];
+  {
+    name: "Rice",
+    desc: "High rainfall crop",
+    img: "https://images.unsplash.com/photo-1625246333195-78d9c38ad449"
+  },
+  {
+    name: "Wheat",
+    desc: "Moderate climate crop",
+    img: "https://images.unsplash.com/photo-1500382017468-9049fed747ef"
+  },
+  {
+    name: "Cotton",
+    desc: "Dry climate crop",
+    img: "https://thumbs.dreamstime.com/b/concept-field-full-cotton-plants-green-leaves-generative-ai-289400905.jpg"
+  },
+  {
+    name: "Maize",
+    desc: "Warm climate crop",
+    img: "https://static.vecteezy.com/system/resources/previews/007/446/030/non_2x/maize-or-corn-for-feeding-animal-in-farmland-free-photo.jpg"
+  }
+];
 
   const settings = {
-    dots: true,
-    infinite: true,
-    speed: 500,
-    autoplay: true,
-    autoplaySpeed: 2500
-  };
+  dots: true,
+  infinite: true,
+  speed: 600,
+  slidesToShow: 3,
+  slidesToScroll: 1,
+  autoplay: true,
+  autoplaySpeed: 2500,
+  arrows: false,
+  centerMode: true,
+  centerPadding: "250px"   // 🔥 THIS FIXES GAP
+};
 
   return (
-    <div className="home-container">
+    <>
+    <div className="home">
 
-      {/* LEFT SIDE */}
-      <div className="left-section">
-        <h1>Crop Recommendation System</h1>
+      {/* NAVBAR */}
+      <nav className="navbar">
+        <div className="logo">
+          <img src="/logo.png" alt="logo" />
+          <span>FarmGenius</span>
+        </div>
+
+        <div className="nav-center">
+          <a href="#home">Home</a>
+          <a href="#features">Features</a>
+          <a href="#about">About</a>
+        </div>
+
+        <div className="nav-right">
+  <div className="user-info">
+    <div className="avatar">
+      {name.charAt(0)}
+    </div>
+
+    <span className="user-text">
+      Hi,&nbsp;<b>{name}</b>
+    </span>
+  </div>
+
+  <button
+    onClick={() => {
+      localStorage.clear();
+      navigate("/");
+    }}
+    className="logout-btn"
+  >
+    Logout
+  </button>
+</div>
+      </nav>
+
+      {/* HERO */}
+      <section className="hero" id="home">
+        <h1>
+          Smart Farming with <span>AI</span>
+        </h1>
 
         <p>
-          Using soil data, temperature, humidity, and rainfall,
-          this system predicts the most suitable crop for farmers 🌱
-          
-            <p>
-            🌾 Increase yield
-            💧 Optimize water usage
-            🌱 Improve sustainability</p>
+          AI-powered crop recommendation system for better yield and efficiency.
         </p>
 
-       
+        <button onClick={() => navigate("/predict")} className="cta-btn">
+          Start Prediction
+        </button>
+      </section>
 
-        <div className="buttons">
-          <button onClick={() => navigate("/predict")}>
-            Predict Crop
-          </button>
+      {/* CAROUSEL */}
+      <section className="carousel-section">
+        <h2>Top Recommended Crops</h2>
 
-          <button className="logout" onClick={() => navigate("/")}>
-            Logout
-          </button>
-        </div>
-      </div>
-
-      {/* RIGHT SIDE (CAROUSEL) */}
-      <div className="right-section">
         <Slider {...settings}>
           {crops.map((crop, index) => (
-            <div key={index} className="slide">
+            <div key={index}>
+              <div className="slide-card">
 
-              <img src={crop.img} alt={crop.name} />
+                <img src={crop.img} alt={crop.name} />
 
-              <div className="overlay">
-                <h2>{crop.name}</h2>
-                <p>{crop.climate}</p>
-
-                <div className="details">
-                  <span>🌡 {crop.temp}</span>
-                  <span>🌧 {crop.rainfall}</span>
+                <div className="card-content">
+                  <h3>{crop.name}</h3>
+                  <p>{crop.desc}</p>
                 </div>
-              </div>
 
+              </div>
             </div>
           ))}
         </Slider>
-      </div>
+      </section>
 
+      {/* FEATURES */}
+      <section className="features" id="features">
+        <h2 className="section-title">
+  AI-Powered Farming Intelligence
+</h2>
+
+<p className="section-subtitle">
+  Leveraging AI and data to improve crop yield and smarter decisions.
+</p>
+
+        <div className="feature-grid">
+          <div>
+            🌱 <b>Smart Prediction</b>
+            <p>AI suggests best crops</p>
+          </div>
+
+          <div>
+            📊 <b>Data Analysis</b>
+            <p>Accurate ML insights</p>
+          </div>
+
+          <div>
+            📈 <b>Better Yield</b>
+            <p>Increase productivity</p>
+          </div>
+        </div>
+      </section>
+
+      
     </div>
+    <footer className="footer" id="about">
+
+  <div className="footer-container">
+
+    {/* LEFT */}
+    <div className="footer-brand">
+      <h2>FarmGenius</h2>
+      <p>
+        Smart agriculture platform powered by AI to help farmers
+        make better crop decisions and improve yield.
+      </p>
+    </div>
+
+    {/* ABOUT */}
+    <div className="footer-column">
+      <h3>About</h3>
+      <p>Our Mission</p>
+      <p>How It Works</p>
+      <p>Technology</p>
+    </div>
+
+    {/* CONTACT */}
+    <div className="footer-column">
+      <h3>Contact</h3>
+      <p>📧 support@farmgenius.com</p>
+      <p>📞 +91 98765 43210</p>
+      <p>📍 Hyderabad, India</p>
+    </div>
+
+  </div>
+
+  <div className="footer-bottom">
+    © 2026 FarmGenius. All rights reserved.
+  </div>
+
+ </footer>
+ </>
   );
 }
 

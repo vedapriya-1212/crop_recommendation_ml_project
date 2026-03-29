@@ -19,7 +19,8 @@ const data = await res.json();
 alert(data.message);
 
 if(res.status === 200){
-localStorage.setItem("user", data.username);
+localStorage.setItem("username", data.name);
+console.log("Stored name:", data.name);
 navigate("/home");
 }else{
 alert(data.message);

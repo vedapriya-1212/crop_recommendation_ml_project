@@ -29,17 +29,19 @@ function Predict() {
     if (data.errors) {
       alert(data.errors.join("\n"));
     } else {
-      navigate("/result", { state: data });
+      navigate("/analysis", { state: data });
     }
   };
 
   return (
+    <div className="predict-page">
     <div className="predict-container">
 
       <div className="predict-card">
 
         <h2>🌱 Enter Soil Data</h2>
-
+        <p className="subtitle">Enter your soil details to get best crop recommendation</p>
+        
         <div className="input-group">
 
           {/* Nitrogen */}
@@ -110,6 +112,7 @@ function Predict() {
 
       </div>
 
+    </div>
     </div>
   );
 }

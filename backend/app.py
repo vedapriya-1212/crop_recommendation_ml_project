@@ -1,6 +1,7 @@
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 from pymongo import MongoClient
+import numpy as np
 import joblib
 import pandas as pd
 import os
@@ -147,7 +148,11 @@ def login():
         if user["password"] != data.get("password"):
             return jsonify({"message": "Invalid password"}), 401
 
-        return jsonify({"message": "Login successful"}), 200
+        return jsonify({
+            "message": "Login successful",
+            "name": user["firstName"],   # 👈 ADD THIS
+            "email": user["email"]
+        }), 200
 
     except Exception as e:
         print("Login Error:", str(e))
@@ -195,6 +200,33 @@ def predict():
             prediction = label_encoder.inverse_transform([prediction])[0]
 
         explanation = crop_info.get(prediction.lower(), "")
+        
+        # 🔥 Predict probabilities
+        probs = model.predict_proba(input_data)[0]
+
+        # 🔥 Get predicted class index
+        pred_index = np.argmax(probs)
+
+        # 🔥 Get prediction label
+        prediction = model.predict(input_data)[0]
+
+        if label_encoder:
+            prediction = label_encoder.inverse_transform([prediction])[0]
+
+        # 🔥 Get crop names
+        if label_encoder:
+            crop_names = label_encoder.classes_
+        else:
+            crop_names = model.classes_
+
+        # 🔥 Create probability dictionary
+        probabilities = {
+            crop_names[i]: round(float(probs[i]) * 100, 2)
+            for i in range(len(crop_names))
+        }
+
+        # Explanation
+        explanation = crop_info.get(prediction.lower(), "")
 
         predictions_collection.insert_one({
             "N": N,
@@ -208,17 +240,18 @@ def predict():
         })
 
         return jsonify({
-            "crop": prediction,
+            "prediction": prediction,
             "explanation": explanation,
+            "probabilities": probabilities,
             "input_data": {
-        "N": N,
-        "P": P,
-        "K": K,
-        "temperature": temperature,
-        "humidity": humidity,
-        "ph": ph,
-        "rainfall": rainfall
-        }
+                "N": N,
+                "P": P,
+                "K": K,
+                "temperature": temperature,
+                "humidity": humidity,
+                "ph": ph,
+                "rainfall": rainfall
+            }
         })
 
     except Exception as e:

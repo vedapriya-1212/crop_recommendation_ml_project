@@ -14,7 +14,6 @@ import {
 ChartJS.register(BarElement, CategoryScale, LinearScale, Tooltip, Legend);
 
 function Result() {
-
   const location = useLocation();
   const data = location.state;
 
@@ -42,10 +41,15 @@ function Result() {
   return (
     <div className="result-container">
 
-      <h1>🌾 Recommended Crop: {data.crop}</h1>
+      {/* 🌾 CROP RESULT */}
+      <div className="crop-card">
+  <h1>🌾 Recommended Crop</h1>
+  <h2>{data.prediction}</h2>
+</div>
+
       <p className="explanation">{data.explanation}</p>
 
-      {/* 📊 SMALL CHART */}
+      {/* 📊 CHART */}
       <div className="chart-wrapper">
         <Bar data={chartData} />
       </div>
