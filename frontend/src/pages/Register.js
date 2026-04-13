@@ -26,7 +26,7 @@ function Register() {
       return;
     }
 
-    const res = await fetch("https://crop-recommend-backend.onrender.com/register", {
+    const res = await fetch("https://crop-recommendation-backend-adbg.onrender.com/register", {
       method: "POST",
       headers: {
         "Content-Type": "application/json"
