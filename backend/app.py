@@ -6,6 +6,11 @@ import joblib
 import pandas as pd
 import os
 
+import os
+from dotenv import load_dotenv
+
+load_dotenv()
+
 app = Flask(__name__)
 CORS(app)
 
@@ -13,7 +18,7 @@ CORS(app)
 # MongoDB Connection
 # ---------------------------
 
-client = MongoClient("mongodb://localhost:27017/")
+client = MongoClient(os.getenv("mongodb+srv://deepthimanthapuram2005_db_user:maCq0jFuxz3yCYP1@cluster0.rm1rgk5.mongodb.net/crop_system"))
 db = client["crop_system"]
 
 users_collection = db["users"]
@@ -273,4 +278,4 @@ def home():
 # ---------------------------
 
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=10000)
+    app.run(host="0.0.0.0", port=int(os.getenv("PORT", 10000)))

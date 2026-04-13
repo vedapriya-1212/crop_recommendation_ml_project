@@ -1,6 +1,8 @@
 flask
+flask-cors
 pymongo
-pandas
-scikit-learn
 joblib
-dnspython
+pandas
+numpy
+scikit-learn
+python-dotenv
