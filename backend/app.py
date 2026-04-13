@@ -12,7 +12,8 @@ from dotenv import load_dotenv
 load_dotenv()
 
 app = Flask(__name__)
-CORS(app)
+
+CORS(app, resources={r"/*": {"origins": "*"}})
 
 # ---------------------------
 # MongoDB Connection
@@ -108,7 +109,7 @@ def validate_inputs(N, P, K, temperature, humidity, ph, rainfall):
 @app.route("/register", methods=["POST"])
 def register():
     try:
-        data = request.json
+        data = request.get_json
         print("Register Data:", data)
 
         if not data:
