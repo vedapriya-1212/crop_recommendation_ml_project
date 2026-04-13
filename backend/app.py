@@ -19,7 +19,7 @@ CORS(app, resources={r"/*": {"origins": "*"}})
 # MongoDB Connection
 # ---------------------------
 
-client = MongoClient(os.getenv("mongodb+srv://deepthimanthapuram2005_db_user:maCq0jFuxz3yCYP1@cluster0.rm1rgk5.mongodb.net/crop_system"))
+client = client = MongoClient(os.getenv("MONGO_URI"))
 db = client["crop_system"]
 
 users_collection = db["users"]
@@ -109,7 +109,7 @@ def validate_inputs(N, P, K, temperature, humidity, ph, rainfall):
 @app.route("/register", methods=["POST"])
 def register():
     try:
-        data = request.get_json
+        data = request.get_json()
         print("Register Data:", data)
 
         if not data:
@@ -143,7 +143,7 @@ def register():
 @app.route("/login", methods=["POST"])
 def login():
     try:
-        data = request.json
+        data = request.json()
         print("Login Data:", data)
 
         user = users_collection.find_one({"email": data.get("email")})
@@ -172,7 +172,7 @@ def login():
 @app.route("/predict", methods=["POST"])
 def predict():
     try:
-        data = request.json
+        data = request.json()
 
         N = float(data["N"])
         P = float(data["P"])
