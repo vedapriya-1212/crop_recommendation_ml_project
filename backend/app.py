@@ -121,33 +121,27 @@ def validate_inputs(N, P, K, temperature, humidity, ph, rainfall):
 def register():
     try:
         data = request.get_json()
-        print("Mongo URI:", os.getenv("MONGO_URI"))
 
-        print("Register Data:", data)
+        name = data.get("name")
+        email = data.get("email")
+        phone = data.get("phone")
+        password = data.get("password")
 
-        if not data:
-            return jsonify({"message": "No data received"}), 400
+        if not name or not email or not phone or not password:
+            return jsonify({"message": "All fields required"}), 400
 
-        if not data.get("email") or not data.get("password"):
-            return jsonify({"message": "Missing fields"}), 400
-
-        
-
-        if users_collection.find_one({"email": data.get("email")}):
+        existing_user = users_collection.find_one({"email": email})
+        if existing_user:
             return jsonify({"message": "User already exists"}), 400
 
-        user = {
-            "firstName": data.get("firstName"),
-            "lastName": data.get("lastName"),
-            "email": data.get("email"),
-            "contact": data.get("contact"),
-            "gender": data.get("gender"),
-            "password": data.get("password")
-        }
+        users_collection.insert_one({
+            "name": name,
+            "email": email,
+            "phone": phone,
+            "password": password
+        })
 
-        users_collection.insert_one(user)
-
-        return jsonify({"message": "Registration successful"}), 200
+        return jsonify({"message": "User registered successfully"})
 
     except Exception as e:
         print("Register Error:", str(e))
@@ -162,21 +156,25 @@ def register():
 def login():
     try:
         data = request.get_json()
-        print("Login Data:", data)
 
-        user = users_collection.find_one({"email": data.get("email")})
+        email = data.get("email")
+        password = data.get("password")
+
+        user = users_collection.find_one({"email": email})
 
         if not user:
             return jsonify({"message": "User not found"}), 404
 
-        if user["password"] != data.get("password"):
+        if user["password"] != password:
             return jsonify({"message": "Invalid password"}), 401
 
         return jsonify({
             "message": "Login successful",
-            "name": user["firstName"],   # 👈 ADD THIS
-            "email": user["email"]
-        }), 200
+            "user": {
+                "name": user.get("name"),
+                "email": user.get("email")
+            }
+        })
 
     except Exception as e:
         print("Login Error:", str(e))

@@ -6,11 +6,9 @@ function Register() {
   const navigate = useNavigate();
 
   const [form, setForm] = useState({
-    firstName: "",
-    lastName: "",
+    name: "",
     email: "",
-    contact: "",
-    gender: "",
+    phone: "",
     password: "",
     confirmPassword: ""
   });
@@ -32,13 +30,11 @@ function Register() {
         "Content-Type": "application/json"
       },
       body: JSON.stringify({
-      firstName: form.firstName,
-      lastName: form.lastName,
-      email: form.email,
-      contact: form.contact,
-      gender: form.gender,
-      password: form.password
-    })
+        name: form.name,
+        email: form.email,
+        phone: form.phone,
+        password: form.password
+      })
     });
 
     const data = await res.json();
@@ -54,24 +50,15 @@ function Register() {
 
       <div className="card">
 
-        
-
-        {/* LEFT SIDE */}
         <div className="left"></div>
-          
-        {/* RIGHT SIDE */}
+
         <div className="right">
-            
           <h2>Create Account</h2>
 
           <div className="form-grid">
 
             <div className="input-box">
-              <input name="firstName" placeholder="First Name" onChange={handleChange}/>
-            </div>
-
-            <div className="input-box">
-              <input name="lastName" placeholder="Last Name" onChange={handleChange}/>
+              <input name="name" placeholder="Full Name" onChange={handleChange}/>
             </div>
 
             <div className="input-box">
@@ -79,22 +66,7 @@ function Register() {
             </div>
 
             <div className="input-box">
-              <input name="contact" placeholder="Contact Number" onChange={handleChange}/>
-            </div>
-
-            {/* ✅ Gender Dropdown (FIXED) */}
-            <div className="input-box">
-              <select
-                name="gender"
-                value={form.gender}
-                onChange={handleChange}
-                required
-              >
-                <option value="">Select Gender</option>
-                <option value="Male">Male</option>
-                <option value="Female">Female</option>
-                <option value="Other">Other</option>
-              </select>
+              <input name="phone" placeholder="Phone Number" onChange={handleChange}/>
             </div>
 
             <div className="input-box">
