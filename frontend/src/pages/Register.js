@@ -6,9 +6,11 @@ function Register() {
   const navigate = useNavigate();
 
   const [form, setForm] = useState({
-    name: "",
+    firstName: "",
+    lastName: "",
     email: "",
-    phone: "",
+    contact: "",
+    gender: "",
     password: "",
     confirmPassword: ""
   });
@@ -18,6 +20,9 @@ function Register() {
   };
 
   const handleRegister = async () => {
+
+    // Debug (optional)
+    console.log("Sending data:", form);
 
     if (form.password !== form.confirmPassword) {
       alert("Passwords do not match");
@@ -30,9 +35,11 @@ function Register() {
         "Content-Type": "application/json"
       },
       body: JSON.stringify({
-        name: form.name,
+        firstName: form.firstName,
+        lastName: form.lastName,
         email: form.email,
-        phone: form.phone,
+        contact: form.contact,
+        gender: form.gender,
         password: form.password
       })
     });
@@ -58,23 +65,66 @@ function Register() {
           <div className="form-grid">
 
             <div className="input-box">
-              <input name="name" placeholder="Full Name" onChange={handleChange}/>
+              <input
+                name="firstName"
+                placeholder="First Name"
+                onChange={handleChange}
+              />
             </div>
 
             <div className="input-box">
-              <input name="email" placeholder="Email" onChange={handleChange}/>
+              <input
+                name="lastName"
+                placeholder="Last Name"
+                onChange={handleChange}
+              />
             </div>
 
             <div className="input-box">
-              <input name="phone" placeholder="Phone Number" onChange={handleChange}/>
+              <input
+                name="email"
+                placeholder="Email"
+                onChange={handleChange}
+              />
             </div>
 
             <div className="input-box">
-              <input type="password" name="password" placeholder="Password" onChange={handleChange}/>
+              <input
+                name="contact"
+                placeholder="Contact Number"
+                onChange={handleChange}
+              />
             </div>
 
             <div className="input-box">
-              <input type="password" name="confirmPassword" placeholder="Confirm Password" onChange={handleChange}/>
+              <select
+                name="gender"
+                value={form.gender}
+                onChange={handleChange}
+              >
+                <option value="">Select Gender</option>
+                <option value="Male">Male</option>
+                <option value="Female">Female</option>
+                <option value="Other">Other</option>
+              </select>
+            </div>
+
+            <div className="input-box">
+              <input
+                type="password"
+                name="password"
+                placeholder="Password"
+                onChange={handleChange}
+              />
+            </div>
+
+            <div className="input-box">
+              <input
+                type="password"
+                name="confirmPassword"
+                placeholder="Confirm Password"
+                onChange={handleChange}
+              />
             </div>
 
           </div>
