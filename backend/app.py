@@ -172,11 +172,9 @@ def login():
 
         return jsonify({
             "message": "Login successful",
-            "user": {
-                "name": user.get("name"),
-                "email": user.get("email")
-            }
-        })
+            "name": user.get("firstName"),  # ✅ important fix
+            "email": user.get("email")
+        }), 200
 
     except Exception as e:
         print("Login Error:", str(e))
