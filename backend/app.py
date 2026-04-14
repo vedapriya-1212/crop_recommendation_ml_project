@@ -119,33 +119,35 @@ def validate_inputs(N, P, K, temperature, humidity, ph, rainfall):
 
 @app.route("/register", methods=["POST"])
 def register():
-    try:
-        data = request.get_json()
+    data = request.get_json()
 
-        name = data.get("name")
-        email = data.get("email")
-        phone = data.get("phone")
-        password = data.get("password")
+    firstName = data.get("firstName")
+    lastName = data.get("lastName")
+    email = data.get("email")
+    contact = data.get("contact")
+    gender = data.get("gender")
+    password = data.get("password")
 
-        if not name or not email or not phone or not password:
-            return jsonify({"message": "All fields required"}), 400
+    # Check all fields
+    if not all([firstName, lastName, email, contact, gender, password]):
+        return jsonify({"message": "All fields required"}), 400
 
-        existing_user = users_collection.find_one({"email": email})
-        if existing_user:
-            return jsonify({"message": "User already exists"}), 400
+    # Check if user already exists
+    existing_user = users_collection.find_one({"email": email})
+    if existing_user:
+        return jsonify({"message": "User already exists"}), 400
 
-        users_collection.insert_one({
-            "name": name,
-            "email": email,
-            "phone": phone,
-            "password": password
-        })
+    # Save user
+    users_collection.insert_one({
+        "firstName": firstName,
+        "lastName": lastName,
+        "email": email,
+        "contact": contact,
+        "gender": gender,
+        "password": password
+    })
 
-        return jsonify({"message": "User registered successfully"})
-
-    except Exception as e:
-        print("Register Error:", str(e))
-        return jsonify({"message": "Server error"}), 500
+    return jsonify({"message": "Registered successfully"}), 200
 
 
 # ---------------------------
