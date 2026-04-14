@@ -9,7 +9,7 @@ const navigate = useNavigate();
 
 const handleLogin = async () => {
 
-const res = await fetch("https://crop-recommendation-backend-adbg.onrender.com/login",{
+const res = await fetch("https://crop-backend-16lg.onrender.com/login",{
 method:"POST",
 headers:{"Content-Type":"application/json"},
 body: JSON.stringify({email,password})

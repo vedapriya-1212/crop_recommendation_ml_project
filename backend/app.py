@@ -4,7 +4,7 @@ from pymongo import MongoClient
 import numpy as np
 import joblib
 import pandas as pd
-import os
+
 
 import os
 from dotenv import load_dotenv
@@ -19,8 +19,19 @@ CORS(app, resources={r"/*": {"origins": "*"}})
 # MongoDB Connection
 # ---------------------------
 
-client = client = MongoClient(os.getenv("MONGO_URI"))
+mongo_uri = os.getenv("MONGO_URI")
+if not mongo_uri:
+    raise ValueError("MONGO_URI not set")
+
+client = MongoClient(mongo_uri)
 db = client["crop_system"]
+
+# Test connection
+try:
+    client.admin.command('ping')
+    print("MongoDB Connected Successfully")
+except Exception as e:
+    print("MongoDB Connection Error:", e)
 
 users_collection = db["users"]
 predictions_collection = db["predictions"]
@@ -110,10 +121,17 @@ def validate_inputs(N, P, K, temperature, humidity, ph, rainfall):
 def register():
     try:
         data = request.get_json()
+        print("Mongo URI:", os.getenv("MONGO_URI"))
+
         print("Register Data:", data)
 
         if not data:
             return jsonify({"message": "No data received"}), 400
+
+        if not data.get("email") or not data.get("password"):
+            return jsonify({"message": "Missing fields"}), 400
+
+        
 
         if users_collection.find_one({"email": data.get("email")}):
             return jsonify({"message": "User already exists"}), 400
@@ -143,7 +161,7 @@ def register():
 @app.route("/login", methods=["POST"])
 def login():
     try:
-        data = request.json()
+        data = request.get_json()
         print("Login Data:", data)
 
         user = users_collection.find_one({"email": data.get("email")})
@@ -172,7 +190,7 @@ def login():
 @app.route("/predict", methods=["POST"])
 def predict():
     try:
-        data = request.json()
+        data = request.get_json()
 
         N = float(data["N"])
         P = float(data["P"])
@@ -182,11 +200,12 @@ def predict():
         ph = float(data["ph"])
         rainfall = float(data["rainfall"])
 
+        # Validate inputs
         errors = validate_inputs(N, P, K, temperature, humidity, ph, rainfall)
-
         if errors:
             return jsonify({"errors": errors})
 
+        # Create dataframe
         input_data = pd.DataFrame(
             [[N, P, K, temperature, humidity, ph, rainfall]],
             columns=[
@@ -200,40 +219,32 @@ def predict():
             ]
         )
 
-        prediction = model.predict(input_data)[0]
-
-        if label_encoder:
-            prediction = label_encoder.inverse_transform([prediction])[0]
-
-        explanation = crop_info.get(prediction.lower(), "")
-        
-        # 🔥 Predict probabilities
+        # ✅ Predict probabilities
         probs = model.predict_proba(input_data)[0]
 
-        # 🔥 Get predicted class index
-        pred_index = np.argmax(probs)
-
-        # 🔥 Get prediction label
+        # ✅ Get prediction
         prediction = model.predict(input_data)[0]
 
+        # ✅ Decode label if encoder exists
         if label_encoder:
             prediction = label_encoder.inverse_transform([prediction])[0]
 
-        # 🔥 Get crop names
+        # ✅ Get crop names
         if label_encoder:
             crop_names = label_encoder.classes_
         else:
             crop_names = model.classes_
 
-        # 🔥 Create probability dictionary
+        # ✅ Create probability dictionary
         probabilities = {
             crop_names[i]: round(float(probs[i]) * 100, 2)
             for i in range(len(crop_names))
         }
 
-        # Explanation
+        # ✅ Explanation
         explanation = crop_info.get(prediction.lower(), "")
 
+        # Save to DB
         predictions_collection.insert_one({
             "N": N,
             "P": P,
@@ -263,7 +274,6 @@ def predict():
     except Exception as e:
         print("Prediction Error:", str(e))
         return jsonify({"message": "Server error"}), 500
-
 
 # ---------------------------
 # Home Route

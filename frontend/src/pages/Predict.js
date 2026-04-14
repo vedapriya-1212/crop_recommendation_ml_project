@@ -18,7 +18,7 @@ function Predict() {
 
   const handlePredict = async () => {
 
-    const res = await fetch("https://crop-recommendation-backend-adbg.onrender.com/predict", {
+    const res = await fetch("https://crop-backend-16lg.onrender.com/predict", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(form)
