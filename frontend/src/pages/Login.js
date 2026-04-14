@@ -2,12 +2,18 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 function Login() {
-
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
 
   const handleLogin = async () => {
+
+    // ✅ Validate fields
+    if (!email || !password) {
+      alert("Please fill all fields");
+      return;
+    }
+
     try {
       const res = await fetch("https://crop-backend-16lg.onrender.com/login", {
         method: "POST",
@@ -15,22 +21,22 @@ function Login() {
           "Content-Type": "application/json"
         },
         body: JSON.stringify({
-          email: email,
-          password: password
+          email,
+          password
         })
       });
 
       const data = await res.json();
 
-      // ✅ Show message
       alert(data.message);
 
-      // ✅ If login success
       if (res.status === 200) {
-        // FIX: access user.name properly
-        localStorage.setItem("username", data.user.name);
+        // ✅ Safe username extraction
+        const username = data.user?.name || data.name || "User";
 
-        console.log("Stored name:", data.user.name);
+        localStorage.setItem("username", username);
+
+        console.log("Stored name:", username);
 
         navigate("/home");
       }

@@ -21,34 +21,55 @@ function Register() {
 
   const handleRegister = async () => {
 
-    // Debug (optional)
     console.log("Sending data:", form);
 
+    // ✅ Check all fields
+    if (
+      !form.firstName ||
+      !form.lastName ||
+      !form.email ||
+      !form.contact ||
+      !form.gender ||
+      !form.password ||
+      !form.confirmPassword
+    ) {
+      alert("Please fill all fields");
+      return;
+    }
+
+    // ✅ Password match
     if (form.password !== form.confirmPassword) {
       alert("Passwords do not match");
       return;
     }
 
-    const res = await fetch("https://crop-backend-16lg.onrender.com/register", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify({
-        firstName: form.firstName,
-        lastName: form.lastName,
-        email: form.email,
-        contact: form.contact,
-        gender: form.gender,
-        password: form.password
-      })
-    });
+    try {
+      const res = await fetch("https://crop-backend-16lg.onrender.com/register", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          firstName: form.firstName,
+          lastName: form.lastName,
+          email: form.email,
+          contact: form.contact,
+          gender: form.gender,
+          password: form.password
+        })
+      });
 
-    const data = await res.json();
-    alert(data.message);
+      const data = await res.json();
 
-    if (res.status === 200) {
-      navigate("/");
+      alert(data.message);
+
+      if (res.status === 200) {
+        navigate("/");
+      }
+
+    } catch (error) {
+      console.error("Register Error:", error);
+      alert("Something went wrong. Please try again.");
     }
   };
 
@@ -68,6 +89,7 @@ function Register() {
               <input
                 name="firstName"
                 placeholder="First Name"
+                value={form.firstName}
                 onChange={handleChange}
               />
             </div>
@@ -76,6 +98,7 @@ function Register() {
               <input
                 name="lastName"
                 placeholder="Last Name"
+                value={form.lastName}
                 onChange={handleChange}
               />
             </div>
@@ -84,6 +107,7 @@ function Register() {
               <input
                 name="email"
                 placeholder="Email"
+                value={form.email}
                 onChange={handleChange}
               />
             </div>
@@ -92,6 +116,7 @@ function Register() {
               <input
                 name="contact"
                 placeholder="Contact Number"
+                value={form.contact}
                 onChange={handleChange}
               />
             </div>
@@ -114,6 +139,7 @@ function Register() {
                 type="password"
                 name="password"
                 placeholder="Password"
+                value={form.password}
                 onChange={handleChange}
               />
             </div>
@@ -123,6 +149,7 @@ function Register() {
                 type="password"
                 name="confirmPassword"
                 placeholder="Confirm Password"
+                value={form.confirmPassword}
                 onChange={handleChange}
               />
             </div>
