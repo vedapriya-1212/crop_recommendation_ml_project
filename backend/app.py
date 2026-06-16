@@ -24,6 +24,11 @@ if not mongo_uri:
     raise ValueError("MONGO_URI not set")
 
 client = MongoClient(mongo_uri)
+
+MONGO_URI = os.getenv("MONGO_URI")
+
+client = MongoClient(MONGO_URI)
+
 db = client["crop_system"]
 
 # Test connection
@@ -287,4 +292,9 @@ def home():
 # ---------------------------
 
 if __name__ == "__main__":
+<<<<<<< HEAD
     app.run(host="0.0.0.0", port=int(os.getenv("PORT", 10000)))
+=======
+    port = int(os.environ.get("PORT", 10000))
+    app.run(host="0.0.0.0", port=port)
+>>>>>>> 0364e6e (Added Procfile for deployment)

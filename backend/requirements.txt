@@ -1,9 +1,9 @@
 flask
 flask-cors
+gunicorn
 pymongo
-joblib
 pandas
 numpy
 scikit-learn
-python-dotenv
-gunicorn
+joblib
+dnspython
