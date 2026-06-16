@@ -44,7 +44,7 @@ function Register() {
     }
 
     try {
-      const res = await fetch("https://crop-backend-16lg.onrender.com/register", {
+      const res = await fetch("https://crop-backend-0mdc.onrender.com/register", {
         method: "POST",
         headers: {
           "Content-Type": "application/json"
